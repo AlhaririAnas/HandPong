@@ -10,6 +10,7 @@ import math
 import mediapipe as mp
 
 from src.core.utils import calculate_angle, ExponentialMovingAverage
+from src.input.gestures import GestureRecognizer
 from config import (
     DOMINANT_HAND, PAUSE_TOGGLE_ENABLED, PAUSE_ACTIVATION_TIME,
     TRACKING_TARGET_POINT, TRACKING_ANCHOR_POINT
@@ -120,6 +121,7 @@ class HandController:
                     self.current_angle = self.smoother.update(raw_angle)
 
                     # Classify hand gesture (finger count)
+                    output_gesture = GestureRecognizer.classify(lms)
                     self.current_gesture = output_gesture
 
                     break
