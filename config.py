@@ -24,3 +24,6 @@ COLOR_TEXT_DIM = (120, 130, 140)
 COLOR_WARNING = (255, 165, 0)      # Orange for warnings/confirmations
 COLOR_SUCCESS = (50, 255, 50)      # Green
 COLOR_GLOW = (255, 255, 255)       # White glow core
+
+
+CONFIRM_HOLD_TIME = 1
