@@ -173,10 +173,11 @@ class GameEngine:
             dt: Delta time since last frame
         """
         target = self.ball.y - self.ai.rect.height // 2
-        # Simplified AI: always track the ball's Y position.
-        # Removed special-case handling for ghost visibility to avoid
-        # fade/blink related issues interfering with AI movement.
-        self.ai.move(target)
+
+        if self.ball.is_ghost and not self.ball.ghost_visible:
+            pass
+        else:
+            self.ai.move(target)
 
     def _handle_collisions(self):
         """Check Ball vs Paddle collisions and apply physics."""
@@ -335,8 +336,7 @@ class GameEngine:
                 winner_obj.active_powerup_text = name
                 winner_obj.powerup_end_time = t + POWERUP_DURATION
         elif eff == "ghost":
-            # Ghost powerup: do not toggle ghost/blink behavior to avoid
-            # fade-related issues. Instead, only show the powerup text.
+            self.ball.set_ghost(POWERUP_DURATION, t)
             if winner_obj:
                 winner_obj.active_powerup_text = name
                 winner_obj.powerup_end_time = t + POWERUP_DURATION
