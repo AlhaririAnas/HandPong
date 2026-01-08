@@ -112,8 +112,12 @@ class ConfirmationDialog:
         surface.blit(txt, txt.get_rect(center=(cx, cy - 50)))
 
         # Draw Buttons with progress bars
-        self._draw_btn(surface, "YES (1)", (cx - 150, cy + 50), self.yes_timer, COLOR_SUCCESS)
-        self._draw_btn(surface, "NO (2)", (cx + 150, cy + 50), self.no_timer, COLOR_DANGER)
+        self._draw_btn(
+            surface, "YES (1)", (cx - 150, cy + 50), self.yes_timer, COLOR_SUCCESS
+        )
+        self._draw_btn(
+            surface, "NO (2)", (cx + 150, cy + 50), self.no_timer, COLOR_DANGER
+        )
 
     def _draw_btn(self, surf, text, pos, progress, color):
         """

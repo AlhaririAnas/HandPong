@@ -7,7 +7,6 @@ Uses smaller numbers for easier calculations.
 """
 
 import random
-import time
 
 
 class MathSystem:
@@ -21,7 +20,7 @@ class MathSystem:
 
         self.equation_string = ""
         self.correct_answer = 0
-        
+
         self.used_equations = set()
 
     def reset(self):
@@ -47,20 +46,20 @@ class MathSystem:
             True if task generated successfully, False otherwise
         """
         max_attempts = 100
-        
+
         for attempt in range(max_attempts):
             equation_str, result = self._generate_equation()
-            
+
             if equation_str not in self.used_equations and 0 <= result <= 5:
                 self.equation_string = equation_str
                 self.correct_answer = int(result)
                 self.used_equations.add(equation_str)
-                
+
                 self.active = True
                 self.task_start_time = current_time
-                
+
                 return True
-        
+
         return False
 
     def _generate_equation(self):
@@ -70,13 +69,15 @@ class MathSystem:
         Returns:
             Tuple of (equation_string, result)
         """
-        equation_type = random.choice([
-            "two_operands",
-            "two_operands", 
-            "two_operands",
-            "three_operands",
-            "three_operands"
-        ])
+        equation_type = random.choice(
+            [
+                "two_operands",
+                "two_operands",
+                "two_operands",
+                "three_operands",
+                "three_operands",
+            ]
+        )
 
         if equation_type == "two_operands":
             return self._generate_two_operands()
@@ -127,22 +128,22 @@ class MathSystem:
         a = random.randint(1, 5)
         b = random.randint(1, 5)
         c = random.randint(1, 4)
-        
+
         op1 = random.choice(["+", "-", "*", "/"])
         op2 = random.choice(["+", "-"])
 
         intermediate = self._calculate(a, b, op1)
-        
+
         if intermediate is None:
             return self._generate_two_operands()
-        
+
         result = self._calculate(intermediate, c, op2)
-        
+
         if result is None:
             return self._generate_two_operands()
 
         display = f"{a} {op1} {b} {op2} {c}"
-        
+
         return (display, result)
 
     def _calculate(self, x, y, op):
@@ -167,7 +168,7 @@ class MathSystem:
             if y == 0 or x % y != 0:
                 return None
             return x // y
-        
+
         return None
 
     def check_answer(self, player_answer):

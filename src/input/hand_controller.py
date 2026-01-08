@@ -12,8 +12,11 @@ import mediapipe as mp
 from src.core.utils import calculate_angle, ExponentialMovingAverage
 from src.input.gestures import GestureRecognizer
 from config import (
-    DOMINANT_HAND, PAUSE_TOGGLE_ENABLED, PAUSE_ACTIVATION_TIME,
-    TRACKING_TARGET_POINT, TRACKING_ANCHOR_POINT
+    DOMINANT_HAND,
+    PAUSE_TOGGLE_ENABLED,
+    PAUSE_ACTIVATION_TIME,
+    TRACKING_TARGET_POINT,
+    TRACKING_ANCHOR_POINT,
 )
 
 
@@ -29,7 +32,7 @@ class HandController:
             max_num_hands=2,
             model_complexity=1,  # Balanced between speed and accuracy
             min_detection_confidence=0.7,
-            min_tracking_confidence=0.5
+            min_tracking_confidence=0.5,
         )
         self.mp_draw = mp.solutions.drawing_utils
 
@@ -72,8 +75,7 @@ class HandController:
             # Check if user initiates pause gesture (X-pose with two hands)
             if PAUSE_TOGGLE_ENABLED and len(results.multi_hand_landmarks) == 2:
                 if self._check_x_pose(
-                    results.multi_hand_landmarks[0],
-                    results.multi_hand_landmarks[1]
+                    results.multi_hand_landmarks[0], results.multi_hand_landmarks[1]
                 ):
                     self.pause_timer += dt
                     pause_progress = min(1.0, self.pause_timer / self.pause_threshold)
@@ -108,8 +110,7 @@ class HandController:
 
                     # Calculate raw angle between anchor and target
                     raw_angle = calculate_angle(
-                        (anchor_x, anchor_y),
-                        (target_x, target_y)
+                        (anchor_x, anchor_y), (target_x, target_y)
                     )
 
                     # Apply adaptive smoothing to reduce jitter
@@ -136,9 +137,9 @@ class HandController:
             output_gesture = "neutral"
 
         return {
-            'angle': self.current_angle,
-            'gesture': output_gesture,
-            'pause_progress': pause_progress
+            "angle": self.current_angle,
+            "gesture": output_gesture,
+            "pause_progress": pause_progress,
         }
 
     def _check_x_pose(self, hand1_lms, hand2_lms):
@@ -154,8 +155,8 @@ class HandController:
         Returns:
             True if X-pose detected, False otherwise
         """
-        h1_idx = hand1_lms.landmark[8]   # Index finger tip
-        h2_idx = hand2_lms.landmark[8]   # Index finger tip
+        h1_idx = hand1_lms.landmark[8]  # Index finger tip
+        h2_idx = hand2_lms.landmark[8]  # Index finger tip
         h1_wrist = hand1_lms.landmark[0]  # Wrist
         h2_wrist = hand2_lms.landmark[0]  # Wrist
 

@@ -11,7 +11,6 @@ import mediapipe as mp
 import time
 import math
 import csv
-from datetime import datetime
 
 from src.core.utils import ExponentialMovingAverage
 
@@ -30,9 +29,7 @@ class DataRecorder:
         # Setup MediaPipe
         self.mp_hands = mp.solutions.hands
         self.hands = self.mp_hands.Hands(
-            max_num_hands=1,
-            min_detection_confidence=0.7,
-            min_tracking_confidence=0.7
+            max_num_hands=1, min_detection_confidence=0.7, min_tracking_confidence=0.7
         )
         self.mp_draw = mp.solutions.drawing_utils
 
@@ -59,7 +56,7 @@ class DataRecorder:
             self.duration_per_sample = float(dur) if dur else 10.0
 
             skel = input("Show Skeleton Overlay? (y/n, default y): ").lower()
-            self.show_skeleton = False if skel == 'n' else True
+            self.show_skeleton = False if skel == "n" else True
 
             return True
         except ValueError:
@@ -97,8 +94,13 @@ class DataRecorder:
 
         # Draw FPS
         cv2.putText(
-            image, f"FPS: {int(fps)}", (10, 30),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2
+            image,
+            f"FPS: {int(fps)}",
+            (10, 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),
+            2,
         )
 
         # Draw Guide Circle
@@ -113,25 +115,39 @@ class DataRecorder:
         # Info Text
         info_text = f"SAMPLE {idx + 1} / {len(self.target_angles)}"
         cv2.putText(
-            image, info_text, (30, 60),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 100, 0), 2
+            image, info_text, (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 100, 0), 2
         )
         cv2.putText(
-            image, f"TARGET: {target_angle} deg", (30, 90),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2
+            image,
+            f"TARGET: {target_angle} deg",
+            (30, 90),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),
+            2,
         )
 
         # State Messages
         if state == "WAIT":
             msg = "ALIGN HAND -> PRESS SPACE"
             cv2.putText(
-                image, msg, (w // 2 - 200, h - 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2
+                image,
+                msg,
+                (w // 2 - 200, h - 50),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1.0,
+                (255, 255, 255),
+                2,
             )
         elif state == "COUNTDOWN":
             cv2.putText(
-                image, str(countdown), (w // 2 - 50, h // 2),
-                cv2.FONT_HERSHEY_SIMPLEX, 5.0, (0, 0, 255), 10
+                image,
+                str(countdown),
+                (w // 2 - 50, h // 2),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                5.0,
+                (0, 0, 255),
+                10,
             )
         elif state == "RECORDING":
             cv2.circle(image, (w - 50, 50), 20, (0, 0, 255), -1)
@@ -218,18 +234,25 @@ class DataRecorder:
                     if results.multi_hand_landmarks:
                         timestamp = global_time + rec_elapsed
                         # Columns: timestamp, sample_id, target, raw, filtered
-                        csv_data.append([timestamp, idx + 1, target, raw_angle, filtered_angle])
+                        csv_data.append(
+                            [timestamp, idx + 1, target, raw_angle, filtered_angle]
+                        )
 
                     # Progress bar
                     cv2.putText(
-                        frame, f"Rec: {rec_elapsed:.1f} / {self.duration_per_sample}s",
-                        (30, 130), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1
+                        frame,
+                        f"Rec: {rec_elapsed:.1f} / {self.duration_per_sample}s",
+                        (30, 130),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7,
+                        (255, 255, 255),
+                        1,
                     )
 
                     if rec_elapsed >= self.duration_per_sample:
                         break  # Move to next sample
 
-                cv2.imshow('Data Recorder', frame)
+                cv2.imshow("Data Recorder", frame)
 
             global_time += self.duration_per_sample
 
@@ -248,9 +271,17 @@ class DataRecorder:
         filepath = os.path.join(self.output_dir, filename)
 
         try:
-            with open(filepath, mode='w', newline='') as f:
+            with open(filepath, mode="w", newline="") as f:
                 writer = csv.writer(f)
-                writer.writerow(['timestamp', 'sample_id', 'target_angle', 'raw_angle', 'filtered_angle'])
+                writer.writerow(
+                    [
+                        "timestamp",
+                        "sample_id",
+                        "target_angle",
+                        "raw_angle",
+                        "filtered_angle",
+                    ]
+                )
                 writer.writerows(data)
             print(f"\nSuccess! Data saved to: {filepath}")
         except IOError as e:

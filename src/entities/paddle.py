@@ -6,7 +6,14 @@ Manages paddle position, collisions, and active powerup effects.
 """
 
 import pygame
-from config import GAME_AREA_Y, GAME_AREA_HEIGHT, PADDLE_WIDTH, PADDLE_HEIGHT, COLOR_P1, COLOR_P2
+from config import (
+    GAME_AREA_Y,
+    GAME_AREA_HEIGHT,
+    PADDLE_WIDTH,
+    PADDLE_HEIGHT,
+    COLOR_P1,
+    COLOR_P2,
+)
 from src.core.utils import clamp
 
 

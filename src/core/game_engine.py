@@ -60,7 +60,7 @@ class GameEngine:
         self.particles.clear()
         self.math_sys.reset()
 
-        self.ai.is_ai = (self.game_mode != "pvp")
+        self.ai.is_ai = self.game_mode != "pvp"
 
         self.level = 1
         self.total_hits = 0
@@ -86,15 +86,16 @@ class GameEngine:
         if self.state != "playing":
             return
 
-        if hand_data.get('pause_progress', 0) >= 1.0:
+        if hand_data.get("pause_progress", 0) >= 1.0:
             self.state = "paused"
             return
 
         target_y_rel = map_angle_to_paddle_y(
-            hand_data['angle'],
+            hand_data["angle"],
             GAME_AREA_HEIGHT,
             self.player.rect.height,
-            PADDLE_ANGLE_UP, PADDLE_ANGLE_DOWN
+            PADDLE_ANGLE_UP,
+            PADDLE_ANGLE_DOWN,
         )
         self.player.move(GAME_AREA_Y + target_y_rel)
 
@@ -109,7 +110,7 @@ class GameEngine:
 
         self._handle_collisions()
         self._check_score()
-        self._manage_math_tasks(curr_time, hand_data.get('gesture'))
+        self._manage_math_tasks(curr_time, hand_data.get("gesture"))
 
         for p in self.particles:
             p.update()
@@ -173,10 +174,11 @@ class GameEngine:
             dt: Delta time since last frame
         """
         target = self.ball.y - self.ai.rect.height // 2
-        # Simplified AI: always track the ball's Y position.
-        # Removed special-case handling for ghost visibility to avoid
-        # fade/blink related issues interfering with AI movement.
-        self.ai.move(target)
+
+        if self.ball.is_ghost and not self.ball.ghost_visible:
+            pass
+        else:
+            self.ai.move(target)
 
     def _handle_collisions(self):
         """Check Ball vs Paddle collisions and apply physics."""
@@ -185,17 +187,13 @@ class GameEngine:
         if b_rect.colliderect(self.player.rect) and self.ball.vx < 0:
             self._reflect_ball(self.player, 1)
             self._spawn_collision_particles(
-                self.player.rect.right,
-                self.ball.y,
-                self.player.color
+                self.player.rect.right, self.ball.y, self.player.color
             )
 
         elif b_rect.colliderect(self.ai.rect) and self.ball.vx > 0:
             self._reflect_ball(self.ai, -1)
             self._spawn_collision_particles(
-                self.ai.rect.left,
-                self.ball.y,
-                self.ai.color
+                self.ai.rect.left, self.ball.y, self.ai.color
             )
 
     def _reflect_ball(self, paddle, direction):
@@ -211,8 +209,7 @@ class GameEngine:
         if self.total_hits % HITS_PER_LEVEL == 0:
             self.level += 1
             self.ball_current_base_speed = min(
-                self.ball_current_base_speed + SPEED_INCREMENT_PER_LEVEL,
-                BALL_MAX_SPEED
+                self.ball_current_base_speed + SPEED_INCREMENT_PER_LEVEL, BALL_MAX_SPEED
             )
 
         current_speed = self.ball_current_base_speed
@@ -255,8 +252,12 @@ class GameEngine:
             if self.game_mode == "pvp":
                 keys = pygame.key.get_pressed()
                 key_map = {
-                    pygame.K_1: 1, pygame.K_2: 2, pygame.K_3: 3,
-                    pygame.K_4: 4, pygame.K_5: 5, pygame.K_0: 0
+                    pygame.K_1: 1,
+                    pygame.K_2: 2,
+                    pygame.K_3: 3,
+                    pygame.K_4: 4,
+                    pygame.K_5: 5,
+                    pygame.K_0: 0,
                 }
                 for k, val in key_map.items():
                     if keys[k] and self.math_sys.check_answer(val):
@@ -287,7 +288,7 @@ class GameEngine:
                 ("agility", "AGILITY", self.player),
                 ("shrink", "SHRINK", self.ai),
                 ("tiny", "TINY BALL", None),
-                ("ghost", "GHOST BALL", None)
+                ("ghost", "GHOST BALL", None),
             ]
             eff, name, entity = random.choice(roster)
             self._apply_effect(eff, name, entity, t, winner_obj=self.player)
@@ -300,7 +301,7 @@ class GameEngine:
                 ("agility", "AGILITY", self.ai),
                 ("shrink", "SHRINK", self.player),
                 ("tiny", "TINY BALL", None),
-                ("ghost", "GHOST BALL", None)
+                ("ghost", "GHOST BALL", None),
             ]
             eff, name, entity = random.choice(roster)
             self._apply_effect(eff, name, entity, t, winner_obj=self.ai)
@@ -313,7 +314,7 @@ class GameEngine:
                 ("agility", "AGILITY", self.ai),
                 ("shrink", "SHRINK", self.player),
                 ("tiny", "TINY BALL", None),
-                ("ghost", "GHOST BALL", None)
+                ("ghost", "GHOST BALL", None),
             ]
             eff, name, entity = random.choice(roster)
             self._apply_effect(eff, name, entity, t, winner_obj=self.ai)
@@ -335,8 +336,7 @@ class GameEngine:
                 winner_obj.active_powerup_text = name
                 winner_obj.powerup_end_time = t + POWERUP_DURATION
         elif eff == "ghost":
-            # Ghost powerup: do not toggle ghost/blink behavior to avoid
-            # fade-related issues. Instead, only show the powerup text.
+            self.ball.set_ghost(POWERUP_DURATION, t)
             if winner_obj:
                 winner_obj.active_powerup_text = name
                 winner_obj.powerup_end_time = t + POWERUP_DURATION

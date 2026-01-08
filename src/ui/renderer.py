@@ -10,9 +10,17 @@ import math
 import time
 
 from config import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, GAME_AREA_X, GAME_AREA_Y,
-    GAME_AREA_WIDTH, GAME_AREA_HEIGHT, COLOR_BG, COLOR_GRID,
-    COLOR_UI_TEXT, COLOR_UI_GHOST, COLOR_P1, COLOR_P2
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+    GAME_AREA_X,
+    GAME_AREA_Y,
+    GAME_AREA_WIDTH,
+    GAME_AREA_HEIGHT,
+    COLOR_BG,
+    COLOR_GRID,
+    COLOR_UI_GHOST,
+    COLOR_P1,
+    COLOR_P2,
 )
 
 
@@ -66,16 +74,10 @@ class Renderer:
 
         if engine.player.active_powerup_text:
             self._draw_powerup_text(
-                engine.player.active_powerup_text,
-                midx - 300,
-                COLOR_P1
+                engine.player.active_powerup_text, midx - 300, COLOR_P1
             )
         if engine.ai.active_powerup_text:
-            self._draw_powerup_text(
-                engine.ai.active_powerup_text,
-                midx + 300,
-                COLOR_P2
-            )
+            self._draw_powerup_text(engine.ai.active_powerup_text, midx + 300, COLOR_P2)
 
         if engine.math_sys.active:
             self._draw_math_task(engine.math_sys)
@@ -85,12 +87,7 @@ class Renderer:
 
     def _draw_field_background(self):
         """Draw the game field with borders and center line."""
-        r = pygame.Rect(
-            GAME_AREA_X,
-            GAME_AREA_Y,
-            GAME_AREA_WIDTH,
-            GAME_AREA_HEIGHT
-        )
+        r = pygame.Rect(GAME_AREA_X, GAME_AREA_Y, GAME_AREA_WIDTH, GAME_AREA_HEIGHT)
         pygame.draw.rect(self.surface, (12, 12, 18), r)
         pygame.draw.rect(self.surface, COLOR_GRID, r, 2)
 
@@ -100,7 +97,7 @@ class Renderer:
             COLOR_GRID,
             (mx, GAME_AREA_Y),
             (mx, GAME_AREA_Y + GAME_AREA_HEIGHT),
-            2
+            2,
         )
 
     def _draw_bg_score(self, score, x, color):
@@ -114,7 +111,9 @@ class Renderer:
         """
         s = self.font_score.render(str(score), True, color)
         s.set_alpha(50)
-        self.surface.blit(s, s.get_rect(center=(x, GAME_AREA_Y + GAME_AREA_HEIGHT // 2)))
+        self.surface.blit(
+            s, s.get_rect(center=(x, GAME_AREA_Y + GAME_AREA_HEIGHT // 2))
+        )
 
     def _draw_hud(self, engine, midx):
         """
@@ -127,8 +126,7 @@ class Renderer:
         txt = f"LEVEL {engine.level} | TIME {engine.game_time_str}"
         surf = self.font_info.render(txt, True, COLOR_UI_GHOST)
         self.surface.blit(
-            surf,
-            surf.get_rect(center=(midx, GAME_AREA_Y + GAME_AREA_HEIGHT - 30))
+            surf, surf.get_rect(center=(midx, GAME_AREA_Y + GAME_AREA_HEIGHT - 30))
         )
 
     def _draw_agility_trail(self, paddle):
@@ -172,42 +170,25 @@ class Renderer:
                 arc_rect.inflate(10, 10),
                 start_angle,
                 end_angle,
-                8
+                8,
             )
             pygame.draw.arc(
-                self.surface,
-                paddle.color,
-                arc_rect,
-                start_angle,
-                end_angle,
-                6
+                self.surface, paddle.color, arc_rect, start_angle, end_angle, 6
             )
             pygame.draw.rect(
-                self.surface,
-                paddle.color,
-                rect.inflate(-10, 0),
-                border_radius=4
+                self.surface, paddle.color, rect.inflate(-10, 0), border_radius=4
             )
         else:
             if paddle.active_powerup_text:
                 glow = pygame.Surface(
-                    (paddle.rect.width + 30, paddle.rect.height + 30),
-                    pygame.SRCALPHA
+                    (paddle.rect.width + 30, paddle.rect.height + 30), pygame.SRCALPHA
                 )
                 pygame.draw.rect(
-                    glow,
-                    (*paddle.color, 60),
-                    glow.get_rect(),
-                    border_radius=15
+                    glow, (*paddle.color, 60), glow.get_rect(), border_radius=15
                 )
                 self.surface.blit(glow, (paddle.rect.x - 15, paddle.rect.y - 15))
 
-            pygame.draw.rect(
-                self.surface,
-                paddle.color,
-                paddle.rect,
-                border_radius=8
-            )
+            pygame.draw.rect(self.surface, paddle.color, paddle.rect, border_radius=8)
 
     def _draw_ball(self, ball):
         """
@@ -229,10 +210,7 @@ class Renderer:
 
         rect = ball.get_draw_rect()
         pygame.draw.circle(
-            self.surface,
-            col,
-            (int(ball.x), int(ball.y)),
-            rect.width // 2
+            self.surface, col, (int(ball.x), int(ball.y)), rect.width // 2
         )
 
     def _draw_math_task(self, math_sys):
@@ -252,24 +230,16 @@ class Renderer:
         pygame.draw.rect(self.surface, (255, 215, 0), rect, 2, border_radius=20)
 
         txt = self.font_math.render(
-            f"{math_sys.equation_string} = ?",
-            True,
-            (255, 255, 255)
+            f"{math_sys.equation_string} = ?", True, (255, 255, 255)
         )
         self.surface.blit(txt, txt.get_rect(center=rect.center))
 
         progress = math_sys.get_progress(time.time())
         barw = int(280 * (1.0 - progress))
         if barw > 0:
-            col = (
-                int(255 * progress),
-                int(255 * (1 - progress)),
-                0
-            )
+            col = (int(255 * progress), int(255 * (1 - progress)), 0)
             pygame.draw.rect(
-                self.surface,
-                col,
-                (rect.left - 10, rect.bottom + 10, barw, 4)
+                self.surface, col, (rect.left - 10, rect.bottom + 10, barw, 4)
             )
 
     def _draw_powerup_text(self, text, x, color):
@@ -284,10 +254,7 @@ class Renderer:
             color: RGB color tuple
         """
         t = self.font_power.render(text, True, color)
-        self.surface.blit(
-            t,
-            t.get_rect(center=(x, GAME_AREA_Y + 40))
-        )
+        self.surface.blit(t, t.get_rect(center=(x, GAME_AREA_Y + 40)))
 
     def _draw_overlay(self, title, subtitle):
         """
@@ -304,12 +271,10 @@ class Renderer:
 
         t1 = self.font_overlay.render(title, True, (255, 255, 255))
         self.surface.blit(
-            t1,
-            t1.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 50))
+            t1, t1.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 50))
         )
 
         t2 = self.font_info.render(subtitle, True, COLOR_UI_GHOST)
         self.surface.blit(
-            t2,
-            t2.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 50))
+            t2, t2.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 50))
         )
