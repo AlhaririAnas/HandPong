@@ -8,8 +8,13 @@ Handles all menu transitions and gesture-based selection with hold timers.
 import pygame
 
 from config import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, MENU_TRANSITION_DELAY,
-    MENU_HOLD_TIME, COLOR_P1, COLOR_TRACKING_GOOD, COLOR_WARNING
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+    MENU_TRANSITION_DELAY,
+    MENU_HOLD_TIME,
+    COLOR_P1,
+    COLOR_TRACKING_GOOD,
+    COLOR_WARNING,
 )
 
 
@@ -30,7 +35,7 @@ class MenuSystem:
         self.main_menu = [
             {"text": "VS BOT", "id": "1", "action": "goto_difficulty"},
             {"text": "VS PLAYER (KEYS)", "id": "2", "action": "start_pvp"},
-            {"text": "EXIT", "id": "3", "action": "confirm_exit"}
+            {"text": "EXIT", "id": "3", "action": "confirm_exit"},
         ]
 
         self.diff_menu = [
@@ -38,18 +43,18 @@ class MenuSystem:
             {"text": "EASY", "id": "2", "action": "easy"},
             {"text": "MIDDLE", "id": "3", "action": "middle"},
             {"text": "HARD", "id": "4", "action": "hard"},
-            {"text": "BACK", "id": "5", "action": "back_main"}
+            {"text": "BACK", "id": "5", "action": "back_main"},
         ]
 
         self.confirm_menu = [
             {"text": "YES", "id": "1", "action": "exit_app"},
-            {"text": "NO", "id": "2", "action": "back_main"}
+            {"text": "NO", "id": "2", "action": "back_main"},
         ]
 
         self.pause_menu = [
             {"text": "RESUME", "id": "1", "action": "resume"},
             {"text": "RESTART", "id": "2", "action": "restart"},
-            {"text": "QUIT TO MENU", "id": "3", "action": "quit_main"}
+            {"text": "QUIT TO MENU", "id": "3", "action": "quit_main"},
         ]
 
         # State tracking
@@ -88,7 +93,7 @@ class MenuSystem:
         target = None
         if gesture and gesture.isdigit():
             for item in current_list:
-                if item['id'] == gesture:
+                if item["id"] == gesture:
                     target = item
                     break
 
@@ -101,7 +106,7 @@ class MenuSystem:
                     self.selection_timer = 0.0
                     self.selected_item = None
                     self.ignore_timer = MENU_TRANSITION_DELAY
-                    return target['action']
+                    return target["action"]
             else:
                 # New item selected, start timer
                 self.selected_item = target
@@ -142,7 +147,7 @@ class MenuSystem:
 
         for i, item in enumerate(menu_list):
             y_pos = start_y + (i * gap)
-            is_sel = (self.selected_item == item)
+            is_sel = self.selected_item == item
 
             # Determine color (Dim if handling cooldown)
             if self.ignore_timer > 0:
@@ -157,22 +162,36 @@ class MenuSystem:
             if is_sel and self.ignore_timer <= 0:
                 # Highlight Box
                 pygame.draw.rect(
-                    surface, (0, 50, 0),
-                    (self.cx - box_width // 2, y_pos - box_height // 2, box_width, box_height),
-                    border_radius=15
+                    surface,
+                    (0, 50, 0),
+                    (
+                        self.cx - box_width // 2,
+                        y_pos - box_height // 2,
+                        box_width,
+                        box_height,
+                    ),
+                    border_radius=15,
                 )
                 pygame.draw.rect(
-                    surface, color,
-                    (self.cx - box_width // 2, y_pos - box_height // 2, box_width, box_height),
-                    2, border_radius=15
+                    surface,
+                    color,
+                    (
+                        self.cx - box_width // 2,
+                        y_pos - box_height // 2,
+                        box_width,
+                        box_height,
+                    ),
+                    2,
+                    border_radius=15,
                 )
 
                 # --- LOAD LINE (Progress Bar) ---
                 bar_y = y_pos + box_height // 2 + 10
                 pygame.draw.rect(
-                    surface, (40, 40, 40),
+                    surface,
+                    (40, 40, 40),
                     (self.cx - box_width // 2, bar_y, box_width, 8),
-                    border_radius=4
+                    border_radius=4,
                 )
 
                 # Fill Bar (Green/Color)
@@ -180,9 +199,10 @@ class MenuSystem:
                     progress = min(1.0, self.selection_timer / self.current_hold_limit)
                     fill_width = int(box_width * progress)
                     pygame.draw.rect(
-                        surface, color,
+                        surface,
+                        color,
                         (self.cx - box_width // 2, bar_y, fill_width, 8),
-                        border_radius=4
+                        border_radius=4,
                     )
 
             # Draw Text

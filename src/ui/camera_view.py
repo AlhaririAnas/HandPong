@@ -10,8 +10,13 @@ import cv2
 import numpy as np
 
 from config import (
-    CAMERA_X, CAMERA_Y, CAMERA_WIDTH, CAMERA_HEIGHT,
-    COLOR_TRACKING_GOOD, COLOR_TRACKING_BAD, COLOR_UI_TEXT
+    CAMERA_X,
+    CAMERA_Y,
+    CAMERA_WIDTH,
+    CAMERA_HEIGHT,
+    COLOR_TRACKING_GOOD,
+    COLOR_TRACKING_BAD,
+    COLOR_UI_TEXT,
 )
 
 
@@ -42,8 +47,7 @@ def draw_camera_pip(surface, frame_bgr, hand_controller):
 
     surface.blit(cam_surf, (CAMERA_X, CAMERA_Y))
     pygame.draw.rect(
-        surface, status_col,
-        (CAMERA_X, CAMERA_Y, CAMERA_WIDTH, CAMERA_HEIGHT), 4
+        surface, status_col, (CAMERA_X, CAMERA_Y, CAMERA_WIDTH, CAMERA_HEIGHT), 4
     )
 
     # --- UI OVERLAY ---

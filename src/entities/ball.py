@@ -10,8 +10,12 @@ import pygame
 import random
 
 from config import (
-    GAME_AREA_X, GAME_AREA_Y, GAME_AREA_WIDTH, GAME_AREA_HEIGHT,
-    BALL_START_SPEED, BALL_RADIUS
+    GAME_AREA_X,
+    GAME_AREA_Y,
+    GAME_AREA_WIDTH,
+    GAME_AREA_HEIGHT,
+    BALL_START_SPEED,
+    BALL_RADIUS,
 )
 
 
@@ -112,8 +116,5 @@ class Ball:
         """
         radius = BALL_RADIUS // 2 if self.is_tiny else BALL_RADIUS
         return pygame.Rect(
-            int(self.x) - radius,
-            int(self.y) - radius,
-            radius * 2,
-            radius * 2
+            int(self.x) - radius, int(self.y) - radius, radius * 2, radius * 2
         )

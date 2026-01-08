@@ -12,9 +12,15 @@ import pygame
 import cv2
 
 from config import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE, FPS,
-    GAME_AREA_X, GAME_AREA_Y, GAME_AREA_WIDTH, GAME_AREA_HEIGHT,
-    PAUSE_SELECTION_TIME
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+    GAME_TITLE,
+    FPS,
+    GAME_AREA_X,
+    GAME_AREA_Y,
+    GAME_AREA_WIDTH,
+    GAME_AREA_HEIGHT,
+    PAUSE_SELECTION_TIME,
 )
 
 from src.core.game_engine import GameEngine
@@ -28,10 +34,7 @@ from analysis.data_recorder import DataRecorder
 
 def setup_logging():
     """Configure logging format for the application."""
-    logging.basicConfig(
-        level=logging.INFO,
-        format='[%(levelname)s] %(message)s'
-    )
+    logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 
 def run_game_loop():
@@ -92,7 +95,7 @@ def run_game_loop():
 
         # --- MENU STATE ---
         if current_state == "menu":
-            action = menu.update(menu.main_menu, hand_data.get('gesture'), dt)
+            action = menu.update(menu.main_menu, hand_data.get("gesture"), dt)
 
             if action == "goto_difficulty":
                 engine.state = "difficulty_select"
@@ -107,7 +110,7 @@ def run_game_loop():
 
         # --- DIFFICULTY SELECTION ---
         elif current_state == "difficulty_select":
-            action = menu.update(menu.diff_menu, hand_data.get('gesture'), dt)
+            action = menu.update(menu.diff_menu, hand_data.get("gesture"), dt)
 
             if action == "back_main":
                 engine.state = "menu"
@@ -120,7 +123,7 @@ def run_game_loop():
 
         # --- EXIT CONFIRMATION ---
         elif current_state == "confirm_exit":
-            action = menu.update(menu.confirm_menu, hand_data.get('gesture'), dt)
+            action = menu.update(menu.confirm_menu, hand_data.get("gesture"), dt)
 
             if action == "exit_app":
                 running = False
@@ -136,7 +139,7 @@ def run_game_loop():
             renderer.draw_game(engine)
 
             # Visual feedback for the Pause gesture
-            pause_progress = hand_data.get('pause_progress', 0)
+            pause_progress = hand_data.get("pause_progress", 0)
             if 0 < pause_progress < 1.0:
                 cx = GAME_AREA_X + GAME_AREA_WIDTH // 2
                 cy = GAME_AREA_Y + GAME_AREA_HEIGHT // 2
@@ -145,9 +148,12 @@ def run_game_loop():
 
                 # Draw a cyan arc representing the hold time
                 pygame.draw.arc(
-                    screen, (0, 255, 255),
+                    screen,
+                    (0, 255, 255),
                     (cx - 60, cy - 60, 120, 120),
-                    0, 6.28 * pause_progress, 5
+                    0,
+                    6.28 * pause_progress,
+                    5,
                 )
 
         # --- PAUSED STATE ---
@@ -155,9 +161,9 @@ def run_game_loop():
             # Handle pause menu navigation with hold gestures
             action = menu.update(
                 menu.pause_menu,
-                hand_data.get('gesture'),
+                hand_data.get("gesture"),
                 dt,
-                hold_time=PAUSE_SELECTION_TIME
+                hold_time=PAUSE_SELECTION_TIME,
             )
 
             if action == "resume":
@@ -179,7 +185,7 @@ def run_game_loop():
             renderer.draw_game(engine)
 
             # Check for "5" gesture (Open Hand) to return to menu
-            if hand_data.get('gesture') == "5":
+            if hand_data.get("gesture") == "5":
                 engine.state = "menu"
                 menu.reset_cooldown()
 
@@ -200,23 +206,19 @@ def main():
     """Parse arguments and launch the appropriate mode."""
     setup_logging()
 
-    parser = argparse.ArgumentParser(
-        description="AI Pong Game & Analysis Tool"
-    )
+    parser = argparse.ArgumentParser(description="AI Pong Game & Analysis Tool")
 
     # Define the two main operation modes
     group = parser.add_mutually_exclusive_group(required=True)
 
     group.add_argument(
-        '--play',
-        action='store_true',
-        help="Launch the main game with UI."
+        "--play", action="store_true", help="Launch the main game with UI."
     )
 
     group.add_argument(
-        '--record_data',
-        action='store_true',
-        help="Launch the data recorder for latency and filter analysis."
+        "--record_data",
+        action="store_true",
+        help="Launch the data recorder for latency and filter analysis.",
     )
 
     # Parse arguments

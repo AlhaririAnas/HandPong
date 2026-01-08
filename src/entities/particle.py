@@ -47,18 +47,12 @@ class Particle:
         """
         if self.life > 0:
             # Create temporary surface to support alpha blending (transparency)
-            s = pygame.Surface(
-                (self.size * 2, self.size * 2),
-                pygame.SRCALPHA
-            )
+            s = pygame.Surface((self.size * 2, self.size * 2), pygame.SRCALPHA)
             alpha = int(self.life * 255)
 
             # Draw circle onto the transparent surface
             pygame.draw.circle(
-                s,
-                (*self.color, alpha),
-                (self.size, self.size),
-                self.size
+                s, (*self.color, alpha), (self.size, self.size), self.size
             )
 
             # Blit to main screen
