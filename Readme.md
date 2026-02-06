@@ -1,5 +1,6 @@
 # 🏓 Hand Pong: AI-Powered Gesture Control
 
+[![Poster](https://img.shields.io/badge/View-Project_Poster-8b0000)](./Poster.pdf)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![MediaPipe](https://img.shields.io/badge/Computer_Vision-MediaPipe-orange)
 ![Status](https://img.shields.io/badge/Status-Finished-green)
@@ -115,6 +116,8 @@ The second plot shows the accuracy across the entire operational range. By apply
 
 This methodology proves that while MediaPipe provides a robust foundation, custom signal processing is essential for high-precision, AI-based gaming interfaces.
 
+
+> 💡 **Deep Dive:** For a high-level visual summary of my methodology and the full experimental results, check out the [**Project Poster (PDF)**](./Poster.pdf).
 ---
 
 ## 🤝 Support & Contribution
