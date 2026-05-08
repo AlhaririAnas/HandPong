@@ -10,7 +10,7 @@
 
 **Hand Pong** reinvents the classic arcade game using modern **AI and Computer Vision**. Instead of a physical controller, the player controls the paddle using the **angle of their thumb**. The project features a robust **Adaptive Smoothing Algorithm** to filter hand jitter, ensuring precision gameplay comparable to hardware mice.
 
-<img width="900" height="951" alt="HandPong" src="https://github.com/user-attachments/assets/3778fb9d-6977-44ad-a05b-3fa7d7c99098" />
+<img width="900" height="900" alt="HandPong" src="https://github.com/user-attachments/assets/3778fb9d-6977-44ad-a05b-3fa7d7c99098" />
 
 *Figure 1: Main gameplay interface.*
 
@@ -32,7 +32,7 @@
 Unlike traditional gesture games that track hand position, Hand Pong tracks **hand posture**.
 The system calculates the vector angle between the **Thumb Tip** and the **Hand Anchor Point**.
 
-<img width="300" height="539" alt="grafik" src="https://github.com/user-attachments/assets/ada8813b-419e-44f5-9b35-65c8e21b51b7" />
+<img width="539" height="539" alt="grafik" src="https://github.com/user-attachments/assets/ada8813b-419e-44f5-9b35-65c8e21b51b7" />
 
 *Figure 2: Visualizing the thumb angle calculation using MediaPipe landmarks.*
 
